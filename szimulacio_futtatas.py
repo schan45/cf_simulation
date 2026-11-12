@@ -80,9 +80,9 @@ def plot_results(result: Result, snapshot_days: Sequence[float], detection_limit
         axes[2].plot(days, observed[:, i] - observed[0, i], color=colors[s])
     if observed.min() <= np.log10(detection_limit) + .5:
         axes[0].axhline(np.log10(detection_limit), color=".5", linestyle=":", linewidth=.8)
-    axes[0].set_ylabel("log10 CFU/mL\n(detektalasi padloval)")
+    axes[0].set_ylabel("log10 CFU/mL\n(detektálási padlóval)")
     axes[0].legend(fontsize=8, ncols=2, loc="upper right")
-    axes[0].set_title("Kutatasi pelda - nem validalt betegpredikcio", fontsize=13)
+    axes[0].set_title("Szimulációs görbék", fontsize=13)
     active = {e.drug for e in result.events}
     for j, drug in enumerate(DRUGS):
         if drug in active:
@@ -98,12 +98,12 @@ def plot_results(result: Result, snapshot_days: Sequence[float], detection_limit
         axes[1].text(.5, .5, "Nincs antibiotikum", transform=axes[1].transAxes, ha="center")
     axes[1].set_ylabel("Helyi C [mg/L]\n(symlog, kuszob 0.1)")
     axes[2].axhline(0, color=".5", linestyle=":", linewidth=.8)
-    axes[2].set_ylabel("Valtozas a kezdethez\nDelta log10 CFU/mL")
+    axes[2].set_ylabel("Változás a kezdethez\nDelta log10 CFU/mL")
     axes[3].stackplot(days, result.percentages.T, labels=labels, colors=palette)
     axes[3].set_ylim(0, 100)
-    axes[3].set_ylabel("Relativ abundancia [%]")
+    axes[3].set_ylabel("Relatív abundancia [%]")
     axes[3].legend(loc="upper center", ncols=2, fontsize=8)
-    axes[3].set_xlabel("Ido [nap]; also szines jelek: dozisok")
+    axes[3].set_xlabel("Idő [nap]; alsó színes jelek: dózisok")
     for ax in axes:
         ax.grid(alpha=.2)
         ax.set_xlim(days[0], days[-1])
@@ -118,9 +118,8 @@ def plot_results(result: Result, snapshot_days: Sequence[float], detection_limit
         bottom += heights
     ax.set_xticks(x, [f"{d:g}. nap" for d in snapshot_days])
     ax.set_ylim(0, 100)
-    ax.set_ylabel("Relativ abundancia [%]")
-    ax.set_title("Kivalasztott idopontok - hipotetikus modell\n"
-                 "Dozisidoben a helyi C es a populaciok folytonosak")
+    ax.set_ylabel("Relatív abundancia [%]")
+    ax.set_title("Mikrobiom összetétel a kiválasztott időpontokban")
     ax.legend(loc="upper left", bbox_to_anchor=(1, 1), fontsize=9)
 
     resistance, axes_r = plt.subplots(3, 1, figsize=(11, 8), sharex=True, layout="constrained")
@@ -132,9 +131,9 @@ def plot_results(result: Result, snapshot_days: Sequence[float], detection_limit
         axes_r[j].set_ylabel(f"{drug}\nR frakcio [%]")
         axes_r[j].set_ylim(0, 100)
         axes_r[j].grid(alpha=.2)
-    axes_r[0].set_title("Gyogyszer-specifikus rezisztens fenotipusok (nem MIC-meres)")
+    axes_r[0].set_title("Gyógyszer-specifikus rezisztens fenotipusok (nem MIC-meres)")
     axes_r[0].legend(fontsize=8, ncols=2)
-    axes_r[-1].set_xlabel("Ido [nap]")
+    axes_r[-1].set_xlabel("Idő [nap]")
     return {"szimulacios_gorbek": fig, "mikrobiom_idopontok": bars, "rezisztens_frakciok": resistance}
 
 
