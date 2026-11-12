@@ -26,8 +26,7 @@ from ui_adatok import (
 importlib.reload(p)
 ROOT = Path(__file__).resolve().parent
 st.set_page_config(page_title="CF-mikrobiom | TDK", page_icon="🧬", layout="wide")
-st.title("CF-mikrobiom szimulátor")
-st.caption("TDK kutatási felület")
+st.title("Cisztás fibrózis mikrobiom kutatási szimulátor")
 
 with st.sidebar:
     st.header("Futtatási beállítások")
