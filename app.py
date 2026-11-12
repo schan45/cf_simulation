@@ -27,11 +27,7 @@ importlib.reload(p)
 ROOT = Path(__file__).resolve().parent
 st.set_page_config(page_title="CF-mikrobiom | TDK", page_icon="🧬", layout="wide")
 st.title("CF-mikrobiom szimulátor")
-st.caption("TDK kutatási felület · páciensprofil → mikrobiom → kezelés → eredmények")
-st.warning(
-    "Kutatási modell, nem klinikai döntéstámogató eszköz. A paraméterek nincsenek betegadatokon "
-    "validálva. A görbékből nem állapítható meg, hogy egy kezelés klinikailag sikeres vagy biztonságos."
-)
+st.caption("TDK kutatási felület")
 
 with st.sidebar:
     st.header("Futtatási beállítások")
@@ -43,12 +39,6 @@ with st.sidebar:
     )
     with_control = st.checkbox("Gyógyszermentes kontroll is", value=True, key="control")
     st.caption("A kontroll ugyanazt a mikrobiomot és immunprofilt használja, antibiotikum nélkül.")
-    st.divider()
-    st.caption("Paraméterhangolás: a mappában lévő modell_parameterek.py. "
-               "R_TABLE, K_TABLE, INTERACTIONS módosítása után frissítsd az oldalt.")
-    with st.expander("Módszertani dokumentum"):
-        st.download_button("Módszertan letöltése", (ROOT / "modell_modszertan.md").read_bytes(),
-                           file_name="modell_modszertan.md", mime="text/markdown")
 
 st.header("1. Páciensprofil")
 col1, col2, col3, col4 = st.columns(4)
@@ -119,8 +109,6 @@ st.header("3. Antibiotikumprofil")
 st.caption("A napi mg az ÖSSZES napi adag: mg/beadás = mg/nap ÷ beadásszám. "
            "A pipák jelölik a kezelési napokat. A beadások egyenletesen oszlanak el a napban, "
            "az első a nap kezdetén. Az 1. nap t=0, a 8. nap t=7 nap időpontban kezdődik.")
-st.info("A 750 mg/nap aztreonam a korábban megadott kutatási példa, nem ajánlott klinikai dózis. "
-        "A nem kijelölt gyógyszerekből nincs beadás.")
 regimen_df = pd.DataFrame([
     {
         SELECTED: d != "tobramycin", DRUG: DRUG_LABELS[d],
@@ -240,18 +228,16 @@ elif completed is not None:
                                     for c in summary if "CFU/mL" in c})
         st.caption("Az abszolút érték koncentráció (CFU/mL), nem a tüdő teljes CFU-ja. "
                    "A nem értelmezhető változások (például 0 kezdeti CFU-nál) üresek.")
-        st.subheader("Kutatási értelmezés – nem kezelési sikerbesorolás")
+        st.subheader("Kutatási értelmezés")
         st.write("A táblázat megmutatja, mely taxon mennyisége nőtt vagy csökkent, és – ha kértél "
-                 "kontrollt – miben tér el a gyógyszermentes forgatókönyvtől. A kisebb összterhelés "
-                 "önmagában nem bizonyít klinikai javulást.")
+                 "kontrollt – miben tér el a gyógyszermentes forgatókönyvtől.")
         oral = {"VD", "PM", "SS", "FN", "RM"}
         present = summary[summary[NAME].isin([p.SPECIES[s] for s in oral])]
         if not present.empty:
             st.write("Kiválasztott orális/kommensális csoportba sorolt taxonok:")
             st.dataframe(present[[NAME, "Végső CFU/mL", "Végső arány (%)"]], hide_index=True)
         st.info("Nincs általános „jó baktérium” címke: a hatás környezet-, faj- és törzsfüggő. "
-                "A klinikai sikerhez betegadatok, tünetek, légzésfunkció és validált célértékek kellenek. "
-                "A kimutatási határ alatti modellérték nem bizonyított eradikáció.")
+                "A klinikai sikerhez betegadatok, tünetek, légzésfunkció és validált célértékek kellenek. ")
     with downloads:
         st.download_button("Teljes eredménycsomag (ZIP)", completed["zip"], "tdk_szimulacio.zip",
                            mime="application/zip")
