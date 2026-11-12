@@ -80,7 +80,7 @@ def plot_results(result: Result, snapshot_days: Sequence[float], detection_limit
         axes[2].plot(days, observed[:, i] - observed[0, i], color=colors[s])
     if observed.min() <= np.log10(detection_limit) + .5:
         axes[0].axhline(np.log10(detection_limit), color=".5", linestyle=":", linewidth=.8)
-    axes[0].set_ylabel("log10 CFU/mL\n(detektálási padlóval)")
+    axes[0].set_ylabel("log10 CFU/mL\n(detektálási küszöbbel)")
     axes[0].legend(fontsize=8, ncols=2, loc="upper right")
     axes[0].set_title("Szimulációs görbék", fontsize=13)
     active = {e.drug for e in result.events}
